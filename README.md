@@ -1,4 +1,5 @@
-#Latest Kernel Build
+# Latest Kernel Build
+##  J710FNODD1BSB2
 Cycle: End of life
 
 1. How to Build
