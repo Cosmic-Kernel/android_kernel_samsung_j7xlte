@@ -37,6 +37,7 @@
 #ifdef CONFIG_TRUSTONIC_TRUSTED_UI
 #include <linux/trustedui.h>
 struct sec_ts_data *tui_tsp_info;
+extern int tui_force_close(uint32_t arg);
 #endif
 
 #ifdef CONFIG_OF
@@ -1916,6 +1917,21 @@ static int sec_ts_input_open(struct input_dev *dev)
 	int ret;
 
 	tsp_debug_info(true, &ts->client->dev, "%s\n", __func__);
+
+#ifdef CONFIG_TRUSTONIC_TRUSTED_UI
+	if(TRUSTEDUI_MODE_TUI_SESSION & trustedui_get_current_mode()){	
+		tsp_debug_err(true, &ts->client->dev, "%s TUI cancel event call!\n", __func__);
+		msleep(100);
+		tui_force_close(1);
+		msleep(200);
+		if(TRUSTEDUI_MODE_TUI_SESSION & trustedui_get_current_mode()){	
+			tsp_debug_err(true, &ts->client->dev, "%s TUI flag force clear!\n",	__func__);
+			trustedui_clear_mask(TRUSTEDUI_MODE_VIDEO_SECURED|TRUSTEDUI_MODE_INPUT_SECURED);
+			trustedui_set_mode(TRUSTEDUI_MODE_OFF);
+		}
+	}
+#endif
+
 	if (ts->lowpower_status)
 		sec_ts_set_lowpowermode(ts, TO_TOUCH_MODE);
 	else {
@@ -1932,6 +1948,20 @@ static void sec_ts_input_close(struct input_dev *dev)
 	struct sec_ts_data *ts = input_get_drvdata(dev);
 
 	tsp_debug_info(true, &ts->client->dev, "%s\n", __func__);
+
+#ifdef CONFIG_TRUSTONIC_TRUSTED_UI
+	if(TRUSTEDUI_MODE_TUI_SESSION & trustedui_get_current_mode()){	
+		tsp_debug_err(true, &ts->client->dev, "%s TUI cancel event call!\n", __func__);
+		msleep(100);
+		tui_force_close(1);
+		msleep(200);
+		if(TRUSTEDUI_MODE_TUI_SESSION & trustedui_get_current_mode()){	
+			tsp_debug_err(true, &ts->client->dev, "%s TUI flag force clear!\n",	__func__);
+			trustedui_clear_mask(TRUSTEDUI_MODE_VIDEO_SECURED|TRUSTEDUI_MODE_INPUT_SECURED);
+			trustedui_set_mode(TRUSTEDUI_MODE_OFF);
+		}
+	}
+#endif
 
 	if (ts->lowpower_mode) {
 		

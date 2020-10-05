@@ -1123,6 +1123,9 @@ static void s2mu005_fg_get_atomic_capacity(
 		struct s2mu005_fuelgauge_data *fuelgauge,
 		union power_supply_propval *val)
 {
+	union power_supply_propval val_chg_setting, val_float_voltage;
+	int avg_vbat = 0;
+
 	if (fuelgauge->pdata->capacity_calculation_type &
 			SEC_FUELGAUGE_CAPACITY_TYPE_ATOMIC) {
 		if (fuelgauge->capacity_old < val->intval)
@@ -1131,11 +1134,23 @@ static void s2mu005_fg_get_atomic_capacity(
 			val->intval = fuelgauge->capacity_old - 1;
 	}
 
+	psy_do_property("s2mu005-charger", get, \
+		POWER_SUPPLY_PROP_CHARGE_NOW, val_chg_setting);
+	psy_do_property("s2mu005-charger", get, \
+		POWER_SUPPLY_PROP_VOLTAGE_MAX, val_float_voltage);
+	avg_vbat = s2mu005_get_avgvbat(fuelgauge);
+
+	dev_info(&fuelgauge->i2c->dev,
+			"%s: float_voltage = %d, avg_vbat = %d\n",
+			__func__, val_float_voltage.intval, avg_vbat);
+
 	/* keep SOC stable in abnormal status */
 	if (fuelgauge->pdata->capacity_calculation_type &
 			SEC_FUELGAUGE_CAPACITY_TYPE_SKIP_ABNORMAL) {
-		if (!fuelgauge->is_charging &&
-				fuelgauge->capacity_old < val->intval) {
+		if ((!fuelgauge->is_charging || \
+			(val_chg_setting.intval == 0x00) || \
+			(val_float_voltage.intval + 20 < avg_vbat)) && \
+			(fuelgauge->capacity_old < val->intval)) {
 			dev_err(&fuelgauge->i2c->dev,
 					"%s: capacity (old %d : new %d)\n",
 					__func__, fuelgauge->capacity_old, val->intval);
@@ -1270,6 +1285,7 @@ static int s2mu005_fg_get_property(struct power_supply *psy,
 	u8 temp = 0;
 	union power_supply_propval ui_soc_val;
 	union power_supply_propval cable_type_val;
+	union power_supply_propval val_chg_setting;
 
 	struct s2mu005_fuelgauge_data *fuelgauge =
 		container_of(psy, struct s2mu005_fuelgauge_data, psy_fg);
@@ -1369,13 +1385,21 @@ static int s2mu005_fg_get_property(struct power_supply *psy,
 			 * by val->intval in booting or resume.
 			 */
 			if (fuelgauge->initial_update_of_soc) {
-				if (fuelgauge->capacity_old != 0 && !fuelgauge->is_charging && val->intval > fuelgauge->capacity_old) {
-					pr_info("%s: raw_soc higher then capacity_old when No-Charging, No sync raw_soc to UI directly.\n", __func__);
-					fuelgauge->initial_update_of_soc = false;
-				} else {
 					/* updated old capacity */
 					fuelgauge->capacity_old = val->intval;
 					fuelgauge->initial_update_of_soc = false;
+					break;
+				}
+			
+            psy_do_property("s2mu005-charger", get, \
+                POWER_SUPPLY_PROP_CHARGE_NOW, val_chg_setting);
+			if (fuelgauge->sleep_initial_update_of_soc) {
+				/* updated old capacity in case of resume */
+				if((fuelgauge->is_charging && (val_chg_setting.intval != 0x00)) ||
+					((!fuelgauge->is_charging) && (fuelgauge->capacity_old >= val->intval))) {
+					dev_info(&fuelgauge->i2c->dev, "%s: After FG Resume\n",__func__);
+					fuelgauge->capacity_old = val->intval;
+					fuelgauge->sleep_initial_update_of_soc = false;
 					break;
 				}
 			}
@@ -1731,6 +1755,7 @@ static int s2mu005_fuelgauge_probe(struct i2c_client *client,
 		}
 	}
 
+	fuelgauge->sleep_initial_update_of_soc = false;
 	fuelgauge->initial_update_of_soc = true;
 
 	fuelgauge->cc_on = true;

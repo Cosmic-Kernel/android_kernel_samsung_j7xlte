@@ -26,6 +26,7 @@
 
 #define FLED_PINCTRL_STATE_DEFAULT "fled_default"
 #define FLED_PINCTRL_STATE_SLEEP "fled_sleep"
+#define LED_TURN_OFF -1
 
 extern struct class *camera_class;
 struct device *flash_dev;
@@ -232,10 +233,9 @@ static void led_set(struct s2mu005_led_data *led_data)
 #endif
 	pr_info("%s start led_set\n", __func__);
 
-	if (led_data->test_brightness == LED_OFF) {
+	if (led_data->test_brightness == LED_TURN_OFF) {
 		pr_info("%s led off\n", __func__);
-		ret = s2mu005_update_reg(led_data->i2c, reg,
-				led_data->data->brightness, mask);
+		ret = s2mu005_update_reg(led_data->i2c, reg, 0, mask);
 		if (ret < 0)
 			goto error_set_bits;
 
@@ -525,7 +525,7 @@ int s2mu005_led_select_ctrl(int ch)
 		} else {
 			value = 0;
 			s2mu005_write_reg(led_data->i2c, CH_FLASH_TORCH_EN, value); 
-			s2mu005_led_set(led_cdev, LED_OFF);
+			s2mu005_led_set(led_cdev, LED_TURN_OFF);
 		}
 	} else if (ch == S2MU005_FLED_CH1) { /* Rear Flash */
 		if (assistive_light == true) {
@@ -615,7 +615,7 @@ static ssize_t rear_flash_store(struct device *dev,
 			/* brightness set - Rear pre-flash*/
 			s2mu005_update_reg(led_data->i2c, S2MU005_REG_FLED_CH1_CTRL1,
 				led_data->preflash_brightness, S2MU005_TORCH_IOUT_MASK);
-			brightness = LED_OFF;
+			brightness = LED_TURN_OFF;
 		}
 	} else if (mode == 1) {
 		/* Turn on Torch */
@@ -633,10 +633,23 @@ static ssize_t rear_flash_store(struct device *dev,
 		brightness = led_data->factory_brightness;
 		value = S2MU005_CH1_TORCH_ON_GPIO;
 	} else if (1001 <= mode && mode <= 1010) {
-		/* Turn on Torch Step 25mA ~ 250mA */
-		temp = (mode - 1000) * 25;
+		/* (mode) 1001, 1002, 1004, 1006, 1009
+		: (torch_step) 0(25mA), 1(50mA), 2(75mA), 3(100mA), 4(125mA) */
+		if (mode <= 1001)
+			temp = 25;
+		else if (mode <= 1002)
+			temp = 50;
+		else if (mode <= 1004)
+			temp = 75;
+		else if (mode <= 1006)
+			temp = 100;
+		else if (mode <= 1009)
+			temp = 125;
+		else
+			temp = 50;
 		brightness= S2MU005_TORCH_BRIGHTNESS(temp);
 		value = S2MU005_CH1_TORCH_ON_GPIO;
+		pr_info("torch current : %d mA\n", temp);
 	} else {
 		pr_info("[LED]%s , Invalid value:%d\n", __func__, mode);
 		goto err;
@@ -713,7 +726,7 @@ static ssize_t front_flash_store(struct device *dev,
 	if (mode == 0) {
 		/* Turn off Torch */
 		value = S2MU005_FLASH_TORCH_OFF;
-		brightness = LED_OFF;
+		brightness = LED_TURN_OFF;
 		assistive_light = false;
 	} else if (mode == 1) {
 		/* Turn on Torch */

@@ -185,6 +185,21 @@ static void s2mu005_charger_otg_control(struct s2mu005_charger_data *charger,
 #endif
 }
 
+static int s2mu005_get_charger_switch_status(struct s2mu005_charger_data *charger)
+{
+	u8 temp;
+	int ret;
+
+	ret = s2mu005_read_reg(charger->client, S2MU005_CHG_CTRL0, &temp);
+	if(ret < 0)
+		return ret;
+
+	ret = temp&0x07;
+	pr_info("%s : charger status 0x%x \n", __func__, ret);
+
+	return ret;
+}
+
 static void s2mu005_enable_charger_switch(struct s2mu005_charger_data *charger,
 		int onoff)
 {
@@ -856,6 +871,9 @@ static int sec_chg_get_property(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
 		val->intval = charger->is_charging;
+		break;
+	case POWER_SUPPLY_PROP_CHARGE_NOW:
+		val->intval = s2mu005_get_charger_switch_status(charger);
 		break;
 	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_REGULATION:
 		break;

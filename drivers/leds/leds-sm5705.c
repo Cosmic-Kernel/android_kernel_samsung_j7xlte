@@ -448,14 +448,14 @@ int sm5705_fled_prepare_flash(unsigned char index)
 		return 0;
 	}
 
-	dev_info(g_sm5705_fled->dev, "%s: check - SM5705(rev.%d)\n",
-			__func__, __get_revision_number());
-
 	if (g_sm5705_fled == NULL) {
 		pr_err("sm5705-fled: %s: invalid g_sm5705_fled, maybe not registed fled \
 			device driver\n", __func__);
 		return -ENXIO;
 	}
+
+	dev_info(g_sm5705_fled->dev, "%s: check - SM5705(rev.%d)\n",
+			__func__, __get_revision_number());
 
 	if (g_sm5705_fled->pdata->led[index].used_gpio == 0) {
 		pr_err("sm5705-fled: %s: can't used external GPIO control, check device tree\n",

@@ -126,6 +126,8 @@ int C_A_D = 1;
 struct pid *cad_pid;
 EXPORT_SYMBOL(cad_pid);
 
+int ignore_fs_panic = 0; // To prevent kernel panic by EIO during shutdown
+
 #if defined CONFIG_SEC_RESTRICT_SETUID
 int sec_check_execpath(struct mm_struct *mm, char *denypath);
 #if defined CONFIG_SEC_RESTRICT_ROOTING_LOG
@@ -382,6 +384,7 @@ void kernel_restart_prepare(char *cmd)
 	/* user process freeze before device shutdown */
 	freeze_processes();
 	usermodehelper_disable();
+	ignore_fs_panic = 1;
 	device_shutdown();
 }
 
@@ -470,6 +473,7 @@ static void kernel_shutdown_prepare(enum system_states state)
 	/* user process freeze before device shutdown */
 	freeze_processes();
 	usermodehelper_disable();
+	ignore_fs_panic = 1;
 	device_shutdown();
 }
 /**

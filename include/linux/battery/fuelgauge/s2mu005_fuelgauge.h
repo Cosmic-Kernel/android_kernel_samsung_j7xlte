@@ -115,6 +115,7 @@ struct s2mu005_fuelgauge_data {
 	unsigned int standard_capacity;
 
 	bool initial_update_of_soc;
+	bool sleep_initial_update_of_soc;
 	struct mutex fg_lock;
 	struct delayed_work isr_work;
 

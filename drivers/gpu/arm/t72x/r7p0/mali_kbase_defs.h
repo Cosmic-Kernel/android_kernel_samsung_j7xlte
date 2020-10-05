@@ -1308,6 +1308,7 @@ struct kbase_context {
 
 	/* MALI_SEC_INTEGRATION */
 	bool destroying_context;
+	
 	atomic_t mem_profile_showing_state;
 	wait_queue_head_t mem_profile_wait;
 };

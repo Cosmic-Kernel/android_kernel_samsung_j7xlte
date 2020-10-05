@@ -33,18 +33,19 @@ config BATTERY_SWELLING_SELF_DISCHARGING
 	help
 	 Say Y to include support for prevent battery swelling with self discharging
 
-config SW_SELF_DISCHARGING
-	bool "enable sw_self_discharging"
-	default n
-	help
-	  Say Y to enable CONFIG_SW_SELF_DISCHARGING
-
 config INBATTERY
 	bool "is inbattery or not"
 	default n
 	depends on BATTERY_SAMSUNG
 	help
 	 Say Y to include support for inbattery
+
+config BATTERY_DET_INTR
+	bool "battery detection using battery interrupt"
+	default n
+	depends on BATTERY_SAMSUNG
+	help
+	 Say Y to include support for battery detection using battery interrupt
 
 config CALC_TIME_TO_FULL
 	tristate "calculate time to full"
@@ -556,6 +557,11 @@ config STORE_MODE
        default n
        help
 	Say Y to enable CONFIG_STORE_MODE
+
+config A3XE
+	bool "config for A3XE"
+	help
+	 Say y to include config for A3XE
 
 config LOWTEMP_VBAT_DROP_PREVENT
 	tristate "Prevent vbat drop when low temperature"

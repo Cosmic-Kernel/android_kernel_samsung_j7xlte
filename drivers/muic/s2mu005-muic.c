@@ -1842,6 +1842,11 @@ static void s2mu005_muic_detect_dev(struct s2mu005_muic_data *muic_data)
 	}
 
 	switch (val2) {
+	case DEV_TYPE2_SDP_1P8S: 
+		intr = MUIC_INTR_ATTACH; 
+		new_dev = ATTACHED_DEV_USB_MUIC; 
+		pr_info("[muic] SDP_1P8S DETECTED\n"); 
+		break;
 	case DEV_TYPE2_JIG_UART_OFF:
 		intr = MUIC_INTR_ATTACH;
 		if (muic_data->is_otg_test) {

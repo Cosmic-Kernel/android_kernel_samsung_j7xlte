@@ -129,7 +129,7 @@ kbase_create_context(struct kbase_device *kbdev, bool is_compat)
 	/* MALI_SEC_INTEGRATION */
 	if (kbdev->vendor_callbacks->create_context)
 		kbdev->vendor_callbacks->create_context(kctx);
-
+	
 	/* MALI_SEC_INTEGRATION */
 	atomic_set(&kctx->mem_profile_showing_state, 0);
 	init_waitqueue_head(&kctx->mem_profile_wait);
@@ -183,7 +183,6 @@ void kbase_destroy_context(struct kbase_context *kctx)
 
 	/* MALI_SEC_INTEGRATION */
 	int profile_count;
-
 	/* MALI_SEC_INTEGRATION */
 	if (!kctx) {
 		printk("An uninitialized or destroyed context is tried to be destroyed. kctx is null\n");

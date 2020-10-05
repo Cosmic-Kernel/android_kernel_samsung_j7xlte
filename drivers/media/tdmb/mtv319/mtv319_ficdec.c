@@ -1211,10 +1211,11 @@ for (i = 0; i < ENS_DESC.svr_num; i++) {
 					= type0_ext13->User_APP_Type[k];
 				ENS_DESC.svr_comp[j].User_APP_data_length[k]
 					= type0_ext13->User_APP_data_length[k];
+
 				for (p = 0;
 				p < type0_ext13->User_APP_data_length[k]; p++)
-					ENS_DESC.svr_comp[j].User_APP_data[p]
-					= type0_ext13->User_APP_data[p];
+					ENS_DESC.svr_comp[j].User_APP_data[k][p]
+					= type0_ext13->User_APP_data[k][p] ;
 			}
 		}
 	}
@@ -1273,7 +1274,7 @@ S32 Get_FIG0_EXT13(U8 fic_cmd, U8 P_D, U8 C_N)
 */
 			for (p = 0; p < type0_ext13.User_APP_data_length[k]
 				; p++)
-				Get_Bytes(1, &type0_ext13.User_APP_data[p]);
+				Get_Bytes(1, &type0_ext13.User_APP_data[k][p]);
 
 		}
 
@@ -2323,94 +2324,94 @@ char *EWS_PRIORITY_TABLE[4] = {
 };
 
 char *EWS_REGION_FORM_TABLE[4] = {
-	"대한민국 전국",
-	"대한민국 정부 지정",
-	"행자부 행정동 표기",
+	"?�?��?�??�국",
+	"?�?��?�??��? 지??,
+	"?�자부 ?�정???�기",
 	"Rfa"
 };
 
 char *EWS_OFFICIAL_ORGANIZATION_TABLE[4] = {
-	"소방방재청", "시,도", "군,도", "Rfa"
+	"?�방방재�?, "????, "�???, "Rfa"
 };
 
 char *EWS_CATEGORY[67][3] = {
-	{"호우 주의보",              "HRA", "Heavy Rain Watch"},
-	{"호우 경보",                "HRW", "Heavy Rain Warning"},
-	{"대설 주의보",              "HSW", "Heavy Snow Watch"},
-	{"대설 경보",                "HAS", "Heavy Snow Warning"},
-	{"폭풍해일주의보",           "SSA", "Storm Surge Watch"},
-	{"폭풍해일 경보",            "SSW", "Storm Surge Warning"},
-	{"황사 경보",                "YSW", "Yellow Sand Warning"},
-	{"한파 주의보",              "CWA", "Cold Wave Watch"},
-	{"한파 경보",                "CWW", "Cold Wave Warning"},
-	{"풍랑 경보",                "WWW", "Wind and Waves Warning"},
+	{"?�우 주의�?,              "HRA", "Heavy Rain Watch"},
+	{"?�우 경보",                "HRW", "Heavy Rain Warning"},
+	{"?�??주의�?,              "HSW", "Heavy Snow Watch"},
+	{"?�??경보",                "HAS", "Heavy Snow Warning"},
+	{"??��?�일주의�?,           "SSA", "Storm Surge Watch"},
+	{"??��?�일 경보",            "SSW", "Storm Surge Warning"},
+	{"?�사 경보",                "YSW", "Yellow Sand Warning"},
+	{"?�파 주의�?,              "CWA", "Cold Wave Watch"},
+	{"?�파 경보",                "CWW", "Cold Wave Warning"},
+	{"?�랑 경보",                "WWW", "Wind and Waves Warning"},
 	{"건조 경보",                "HAW", "Heavy Arid Warning"},
-	{"산불 경보",                "MFW", "Mountain Fire Warning"},
-	{"교통 통제",                "RTW", "Regulate Traffic Warning"},
-	{"국가 비상 상황 발생",
+	{"?�불 경보",                "MFW", "Mountain Fire Warning"},
+	{"교통 ?�제",                "RTW", "Regulate Traffic Warning"},
+	{"�?? 비상 ?�황 발생",
 	"EAN", "Emergency Action Notification(National only)"},
-	{"국가 비상 상황 종료",
+	{"�?? 비상 ?�황 종료",
 	"EAT", "Emergency Action Termination(National only)"},
-	{"중앙 재난 안전 대책 본부",
+	{"중앙 ?�난 ?�전 ?��?본�?",
 	"NIC", "National Information Center"},
-	{"전국적 주기 테스트",       "NPT", "National Periodic Test"},
-	{"전국적 월별 의무 테스트",  "RMT", "Required Monthly Test"},
-	{"전국적 주간별 의무 테스트", "RWT", "Required Weekly Test"},
-	{"특수 수신기 테스트",       "STT", "Special Terminal Test"},
-	{"행정 메시지",              "ADR", "Administrative Message"},
-	{"산사태 경보",              "AVW", "Avalanche Warning"},
-	{"산사태 주의보",            "AVA", "Avalanche Watch"},
-	{"폭풍설경보",               "BZW", "Blizzard Warning"},
-	{"어린이 유괴 긴급 상황",
+	{"?�국??주기 ?�스??,       "NPT", "National Periodic Test"},
+	{"?�국???�별 ?�무 ?�스??,  "RMT", "Required Monthly Test"},
+	{"?�국??주간�??�무 ?�스??, "RWT", "Required Weekly Test"},
+	{"?�수 ?�신�??�스??,       "STT", "Special Terminal Test"},
+	{"?�정 메시지",              "ADR", "Administrative Message"},
+	{"?�사??경보",              "AVW", "Avalanche Warning"},
+	{"?�사??주의�?,            "AVA", "Avalanche Watch"},
+	{"??��?�경�?,               "BZW", "Blizzard Warning"},
+	{"?�린???�괴 긴급 ?�황",
 	"CAE", "Child Abduction Emergency"},
-	{"시민 위험 상황 경보",      "CDW", "Civil Danger Warning"},
-	{"시민 응급 상황 메시지",    "CEM", "Civil Emergency Message"},
-	{"해안 침수 경보",           "CFW", "Coastal Flood Warning"},
-	{"해안 침수 주의보",         "CFA", "Coastal Flood Watch"},
-	{"모래 폭풍 경보",           "DSW", "Dust Storm Warning"},
-	{"지진 경보",                "EQW", "Earthquake Warning"},
-	{"즉시 대피",                "EVI", "Evacuation Immediate"},
-	{"화재 경보",                "FRW", "Fire Warning"},
-	{"긴급 홍수 경보",           "FFW", "Flash Flood Warning"},
-	{"긴급 홍수 주의보",         "FFA", "Flash Flood Watch"},
-	{"긴급 홍수 상황",           "FFS", "Flash Flood Statement"},
-	{"홍수 경보",                "FLW", "Flood Warning"},
-	{"홍수 주의보",              "FLA", "Flood Watch"},
-	{"홍수 상황",                "FLS", "Flood Statement"},
-	{"위험 물질 경보",
+	{"?��? ?�험 ?�황 경보",      "CDW", "Civil Danger Warning"},
+	{"?��? ?�급 ?�황 메시지",    "CEM", "Civil Emergency Message"},
+	{"?�안 침수 경보",           "CFW", "Coastal Flood Warning"},
+	{"?�안 침수 주의�?,         "CFA", "Coastal Flood Watch"},
+	{"모래 ??�� 경보",           "DSW", "Dust Storm Warning"},
+	{"지�?경보",                "EQW", "Earthquake Warning"},
+	{"즉시 ?�??,                "EVI", "Evacuation Immediate"},
+	{"?�재 경보",                "FRW", "Fire Warning"},
+	{"긴급 ?�수 경보",           "FFW", "Flash Flood Warning"},
+	{"긴급 ?�수 주의�?,         "FFA", "Flash Flood Watch"},
+	{"긴급 ?�수 ?�황",           "FFS", "Flash Flood Statement"},
+	{"?�수 경보",                "FLW", "Flood Warning"},
+	{"?�수 주의�?,              "FLA", "Flood Watch"},
+	{"?�수 ?�황",                "FLS", "Flood Statement"},
+	{"?�험 물질 경보",
 	"HMW", "Hazardous Materials Warning"},
 	{"강풍 경보",                "HWW", "High Wind Warning"},
-	{"강풍 주의보",              "HWA", "High Wind Watch"},
-	{"태풍 경보",                "HUW", "Hurricane Warning"},
-	{"태풍 주의보",              "HUA", "Hurricane Watch"},
-	{"태풍정보",                 "HLS", "Hurricane Statement"},
-	{"법집행 경고",              "LEW", "Law Enforcement Warning"},
-	{"지역 긴급 상황",           "LAE", "Local Area Emergency"},
-	{"통신 메지시 알림",
+	{"강풍 주의�?,              "HWA", "High Wind Watch"},
+	{"?�풍 경보",                "HUW", "Hurricane Warning"},
+	{"?�풍 주의�?,              "HUA", "Hurricane Watch"},
+	{"?�풍?�보",                 "HLS", "Hurricane Statement"},
+	{"법집??경고",              "LEW", "Law Enforcement Warning"},
+	{"지??긴급 ?�황",           "LAE", "Local Area Emergency"},
+	{"?�신 메�????�림",
 	"NMN", "Network Message Notification"},
-	{"119 전화 불통 응급 상황",
+	{"119 ?�화 불통 ?�급 ?�황",
 	"TOE", "119 Telephone Outage Emergency"},
-	{"핵발전소 관련 경보",
+	{"?�발?�소 관??경보",
 	"NUW", "Nuclear Power Plant Warning"},
-	{"실제/연습 경보",           "DMO", "Practice/Demo Warning"},
-	{"방사능 위험 경보",
+	{"?�제/?�습 경보",           "DMO", "Practice/Demo Warning"},
+	{"방사???�험 경보",
 	"RHW", "Radiological Hazard Warning"},
-	{"뇌우 경보",                "SVR", "Severe Thunderstorm Warning"},
-	{"뇌우 주의보",              "SVA", "Severe Thunderstorm Watch"},
-	{"악기상정보",               "SVS", "Severe Weather Statement"},
-	{"안전한 장소로 피난 경보",
+	{"?�우 경보",                "SVR", "Severe Thunderstorm Warning"},
+	{"?�우 주의�?,              "SVA", "Severe Thunderstorm Watch"},
+	{"?�기?�정�?,               "SVS", "Severe Weather Statement"},
+	{"?�전???�소�??�난 경보",
 	"SPW", "Shelter in Place Warning"},
-	{"특수 해양 경보",           "SMW", "Special Marine Warning"},
-	{"특이 기상 정보",           "SPS", "Special Weather Statement"},
-	{"토네이도 경보",            "TOR", "Tornado Warning"},
-	{"토네이도 주의보",          "TOA", "Tornado Watch"},
-	{"열대 폭풍(태풍) 경보",     "TRW", "Tropical Storm Warning"},
-	{"열대 폭풍(태풍) 주의보",   "TRA", "Tropical Storm Watch"},
-	{"지진해일 경보",            "TSW", "Tsunami Warning"},
-	{"지진해일 주의보",          "TSA", "Tsunami Watch"},
-	{"화산 경보",                "VOW", "Volcano Warning"},
-	{"눈폭풍 경보",              "WSW", "Winter Storm Warning"},
-	{"눈폭풍 주의보",            "WSA", "Winter Storm Watch"}
+	{"?�수 ?�양 경보",           "SMW", "Special Marine Warning"},
+	{"?�이 기상 ?�보",           "SPS", "Special Weather Statement"},
+	{"?�네?�도 경보",            "TOR", "Tornado Warning"},
+	{"?�네?�도 주의�?,          "TOA", "Tornado Watch"},
+	{"?��? ??��(?�풍) 경보",     "TRW", "Tropical Storm Warning"},
+	{"?��? ??��(?�풍) 주의�?,   "TRA", "Tropical Storm Watch"},
+	{"지진해??경보",            "TSW", "Tsunami Warning"},
+	{"지진해??주의�?,          "TSA", "Tsunami Watch"},
+	{"?�산 경보",                "VOW", "Volcano Warning"},
+	{"?�폭??경보",              "WSW", "Winter Storm Warning"},
+	{"?�폭??주의�?,            "WSA", "Winter Storm Watch"}
 };
 
 static const U16 crc_ccitt_tab[] = {
@@ -2618,6 +2619,9 @@ void rtvFICDEC_GetEnsembleInfo(struct ensemble_info_type *ensble,
 				ensble->sub_ch[subch_idx].scids
 					= desc->svr_comp[comp_idx].SCidS;
 				ensble->sub_ch[subch_idx].ecc = Ensemble_ECC;
+
+				ensble->sub_ch[subch_idx].ca_flags
+						= desc->svr_comp[comp_idx].CA_flag;
 				subch_idx++;
 				break;
 
@@ -2663,6 +2667,9 @@ void rtvFICDEC_GetEnsembleInfo(struct ensemble_info_type *ensble,
 				DPRINTK("NO TMID\n");
 				break;
 			}
+		if (desc->svr_comp[comp_idx].CA_flag)
+			DPRINTK("%s: sub_channel_id(%d), ca_flag detected\n", __func__,
+					(subch_idx - 1));
 
 /*
 		RTV_DBGMSG2("ensble->sub_ch[%d].sub_ch_id: %d\n",
