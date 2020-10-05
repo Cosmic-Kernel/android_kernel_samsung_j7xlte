@@ -59,7 +59,14 @@ config BATTERY_AGE_FORECAST
 	default n
 	depends on BATTERY_SWELLING
 	help
-	 Say Y to use calc time to full function.
+	 Say Y to use battery age forecast.
+	 
+config BATTERY_AGE_FORECAST_DETACHABLE
+	tristate "battery age forecast for detachable"
+	default n
+	select BATTERY_AGE_FORECAST
+	help
+	Say Y to use battery age forecast for detachable.
 
 # Fuel Gauge
 

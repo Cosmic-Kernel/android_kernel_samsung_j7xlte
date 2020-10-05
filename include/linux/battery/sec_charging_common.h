@@ -89,6 +89,12 @@ enum sec_battery_adc_channel {
 	SEC_BAT_ADC_CHANNEL_NUM,
 };
 
+enum sec_battery_charge_mode {
+	SEC_BAT_CHG_MODE_CHARGING = 0,
+	SEC_BAT_CHG_MODE_CHARGING_OFF,
+	SEC_BAT_CHG_MODE_BUCK_OFF,
+};
+
 /* charging mode */
 enum sec_battery_charging_mode {
 	/* no charging */
