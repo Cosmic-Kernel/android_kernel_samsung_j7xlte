@@ -6,9 +6,10 @@ COSMIC_DEV=themagicalmammal
 #################### Main Dir ###################
 COSMIC_DIR=$(pwd)
 ############## Define toolchan path #############
-COSMIC_TOOl=aarch64-linux-android-4.9
-COSMIC_COMPILE_TYPE=linux-android-
+COSMIC_TOOl=linaro
+COSMIC_COMPILE_TYPE=elf-
 COSMIC_TC=~/$COSMIC_TOOl/bin/aarch64-$COSMIC_COMPILE_TYPE
+COSMIC_DATE=$(date +'%a %b %d %R:%S UTC %Y')
 ### Define proper arch and dir for dts files ###
 COSMIC_DTS=arch/arm64/boot/dts
 ########### Compiled image location #############
@@ -31,6 +32,7 @@ export PLATFORM_VERSION=$COSMIC_PLATFORM
 ############### Naming the kernel ###############
 export KBUILD_BUILD_HOST=$COSMIC_NAME
 export KBUILD_BUILD_USER=$COSMIC_DEV
+export KBUILD_BUILD_TIMESTAMP=$COSMIC_DATE
 ##### Device specific Variables [SM-J710F] ######
 COSMIC_CONFG_J710F=cosmic_defconfig
 COSMIC_VARIANT_J710F=J710X
@@ -66,6 +68,7 @@ BUILD_ZIMAGE()
 clear
 echo "----------------------------------------------"
 echo "$COSMIC_NAME $COSMIC_VERSION Kernel Script"
+echo "Build Date: $COSMIC_DATE"
 echo "----------------------------------------------"
 PS3='Please select your option (1-2): '
 menuvar=("SM-J710X" "Exit")
