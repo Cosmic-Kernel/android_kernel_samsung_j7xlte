@@ -15,7 +15,7 @@ COSMIC_DTS=arch/arm64/boot/dts
 ########### Compiled image location #############
 COSMIC_KERNEL=$COSMIC_DIR/arch/arm64/boot/Image
 ############# Kernel Name & Version #############
-COSMIC_VERSION=1.2
+COSMIC_VERSION=2
 COSMIC_NAME=Cosmic
 ################## Thread count #################
 COSMIC_JOBS=$((`nproc`-1))
@@ -33,6 +33,7 @@ export PLATFORM_VERSION=$COSMIC_PLATFORM
 export KBUILD_BUILD_HOST=$COSMIC_NAME
 export KBUILD_BUILD_USER=$COSMIC_DEV
 export KBUILD_BUILD_TIMESTAMP=$COSMIC_DATE
+export KBUILD_BUILD_VERSION=$COSMIC_VERSION
 ##### Device specific Variables [SM-J710F] ######
 COSMIC_CONFG_J710F=cosmic_defconfig
 COSMIC_VARIANT_J710F=J710X
